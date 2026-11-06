@@ -1,0 +1,12 @@
+# Keep the repository byte-identical across platforms: LF everywhere in text
+# files, binary types left untouched.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.tgz binary
+*.zip binary
+
+package-lock.json -diff linguist-generated

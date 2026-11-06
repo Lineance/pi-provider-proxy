@@ -1,0 +1,109 @@
+{
+  "name": "pi-provider-proxy",
+  "version": "0.1.0",
+  "description": "Per-provider HTTP proxy routing for pi. Turn a proxy on or off for each provider (and pick a different proxy per provider) at runtime, without touching pi's global httpProxy.",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "pi",
+    "proxy",
+    "http-proxy",
+    "undici",
+    "dispatcher"
+  ],
+  "license": "MIT",
+  "author": "Jerry",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./schema.json": "./schema.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "schema.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "changelogPath": "./CHANGELOG.md"
+  },
+  "scripts": {
+    "build": "node scripts/clean.mjs && tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "check:pkg": "node scripts/check-pkg.mjs",
+    "check:size": "node scripts/check-size.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run format:check && npm run test:coverage && npm run build && npm run check:pkg && npm run check:size",
+    "prepublishOnly": "npm run verify",
+    "prepare": "husky"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@earendil-works/pi-coding-agent": "1.5.0",
+    "@eslint/js": "^9.27.0",
+    "@types/node": "^22.15.0",
+    "@vitest/coverage-v8": "^5.1.0",
+    "eslint": "^9.27.0",
+    "eslint-config-prettier": "^10.1.0",
+    "globals": "^16.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.5.3",
+    "publint": "^0.3.12",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.0",
+    "undici": "8.12.3",
+    "vitest": "^5.1.0"
+  },
+  "lint-staged": {
+    "*.{ts,mjs,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lineance/pi-provider-proxy.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lineance/pi-provider-proxy/issues"
+  },
+  "homepage": "https://github.com/Lineance/pi-provider-proxy#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

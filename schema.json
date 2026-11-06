@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://unpkg.com/pi-provider-proxy/schema.json",
+  "title": "pi-provider-proxy configuration",
+  "description": "Per-provider proxy routing for pi. Route each provider direct, through a proxy, or inherit pi's own httpProxy settings.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Master switch. false makes every request inherit pi's settings (extension installed but inert)."
+    },
+    "default": {
+      "$ref": "#/definitions/rule",
+      "description": "Rule for hosts that match no provider and no host rule. Defaults to \"inherit\"."
+    },
+    "providers": {
+      "type": "object",
+      "description": "Per-provider rules, keyed by pi provider id (e.g. \"provider-a\", \"provider-b\").",
+      "additionalProperties": {
+        "$ref": "#/definitions/rule"
+      },
+      "default": {}
+    },
+    "hosts": {
+      "type": "object",
+      "description": "Escape hatch: rules for raw hosts, supporting \"api.example.com\", \"*.example.com\" and \"*\".",
+      "additionalProperties": {
+        "$ref": "#/definitions/rule"
+      },
+      "default": {}
+    },
+    "loopbackAlwaysDirect": {
+      "type": "boolean",
+      "default": true,
+      "description": "Always connect directly to loopback, link-local, RFC1918 and .local hosts, regardless of rules."
+    },
+    "statusLine": {
+      "enum": ["auto", "always", "off"],
+      "default": "auto",
+      "description": "Footer status line: auto shows it only when explicit provider rules exist."
+    },
+    "statusLineShowDirect": {
+      "type": "boolean",
+      "default": false,
+      "description": "Also list direct/inherit rules in the footer status line. Off by default: only providers routed through a proxy are advertised."
+    }
+  },
+  "definitions": {
+    "rule": {
+      "oneOf": [
+        {
+          "enum": ["inherit", "direct", "proxy"]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": {
+              "enum": ["inherit", "direct", "proxy"]
+            },
+            "proxy": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https?://",
+              "description": "Proxy URL (http:// or https://). Required for mode=proxy unless default.proxy is set."
+            }
+          }
+        }
+      ]
+    }
+  }
+}
